@@ -2,7 +2,16 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/typescript-node
 {
 	"name": "Node.js & TypeScript",
-	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-18"
+	"image": "mcr.microsoft.com/devcontainers/typescript-node:0-18",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"csstools.postcss",
+				"bradlc.vscode-tailwindcss",
+				"Vue.volar"
+			]
+		}
+	}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},

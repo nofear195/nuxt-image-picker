@@ -1,17 +1,20 @@
 <template>
     <div class="flex flex-col focus:outline-none h-full border  p-5" ref="classifier" tabindex="1" @mouseove="enterArea"
         @keydown.exact="changeCurrentLabelByHotKey" @wheel="resizeImageSizeByWheel">
-        <div class="h-1/6 flex justify-between">
-            <div class="w-1/5">
+        <div class="h-[10%] flex justify-around items-center my-2">
+            <div class="w-1/5 flex items-center flex-col">
+                <div class="mb-2">Resize Image</div>
                 <el-slider v-model="imageViewSize" :min="20" :max="100" :show-tooltip="false"></el-slider>
             </div>
-            <div class="w-1/5">
+            <div class="w-1/5 flex items-center flex-col">
+                <div class="mb-2">Labels</div>
                 <el-select v-model="currentLabelName">
                     <el-option v-for="label in labels" :key="label.name" :value="label.name"></el-option>
                 </el-select>
             </div>
-            <div class="w-1/5">
-                <el-select v-model="selectValue" clearable>
+            <div class="w-1/6 flex items-center flex-col">
+                <div class="mb-2">Switch Categories</div>
+                <el-select v-model="selectValue">
                     <el-option key="all" :label="getLabelCount('all')" value="all"></el-option>
                     <el-option key="unpick" :label="getLabelCount('unpick')" value="unpick"></el-option>
                     <el-option v-for="label in labels" :key="label.name" :label="getLabelCount(label.name)"
@@ -19,11 +22,11 @@
                 </el-select>
             </div>
         </div>
-        <div class="h-5/6 hover:cursor-pointer flex flex-wrap overflow-auto items-center justify-evenly">
+        <div class="h-[90%] hover:cursor-pointer flex flex-wrap overflow-auto items-center justify-evenly border-t-2 pt-2">
             <template v-for="file in filterFiles" :key="file.name">
-                <div class="box-border flex flex-col relative border border-solid m-3"
+                <div class="box-border flex flex-col relative border-4  border-transparent m-3"
                     :style="`border-color:${file.label ? file.label.color : ''};width: ${imageViewSize}%`"
-                    @click="classifyFiles(file.name)">
+                    @click="classifyFile(file)">
                     <div v-if="file.label">
                         <el-button class="absolute z-10 right-[2%] top-[2%]" circle
                             :style="`background: ${file.label.color}`">
@@ -33,7 +36,7 @@
                         </el-button>
                     </div>
                     <el-image :src="file.src" fit="cover"></el-image>
-                    <div class="text-center">{{ file.name }}</div>
+                    <div class="text-center m-2">{{ file.name }}</div>
                 </div>
             </template>
         </div>
@@ -50,14 +53,13 @@ const props = defineProps<{
 }>();
 
 const emits = defineEmits<{
-    (e: "changeCurrentLabel", label: number): void;
+    (e: "changeFileLabel", file: File): void;
 }>();
 
 const imageViewSize: Ref<number> = ref(0);
 const selectValue: Ref<string> = ref("all");
 const classifier: Ref<HTMLDivElement | null> = ref(null);
 const currentLabelName: Ref<string> = ref('');
-
 
 watch(props.labels, () => {
     currentLabelName.value = props.labels[0].name;
@@ -81,7 +83,6 @@ function enterArea(): void {
 function changeCurrentLabelByHotKey(event: KeyboardEvent): void {
     const pressKeyToNumber = Number(event.key);
     if (isNaN(pressKeyToNumber)) return;
-    emits('changeCurrentLabel', pressKeyToNumber)
 }
 
 function resizeImageSizeByWheel(event: WheelEvent): void {
@@ -104,25 +105,23 @@ function getLabelCount(name: string): string {
     return `${name} (${pickedNumber.length})`;
 }
 
-function classifyFiles(name: string): void {
+function classifyFile(file: File): void {
+
     if (props.labels.length === 0) return;
-    const target = props.files.find((item) => item.name === name);
-    if (!target) return;
+
     const currentLabel = props.labels.find((label) => label.name === currentLabelName.value)
     if (!currentLabel) return;
 
-
-    if (!target.label) {
-        target.label = currentLabel
-        return;
-    }
-
-    if (target.label.name === currentLabel.name) {
-        target.label = undefined;
-
+    if (file.label === undefined) {
+        file.label = currentLabel;
     } else {
-        target.label = currentLabel
+        if (file.label.name === currentLabel.name) {
+            file.label = undefined;
+        } else {
+            file.label = currentLabel
+        }
     }
+    emits('changeFileLabel', file);
 }
 
 </script>

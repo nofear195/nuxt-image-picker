@@ -1,10 +1,18 @@
 <template>
   <div class="w-full h-full flex flex-wrap">
     <div class="w-[80%] h-full">
-      <ImagePanel :files="files" :labels="labels" />
+      <ImagePanel :files="files" :labels="labels" @change-file-label="changeFileLabel" />
     </div>
     <div class="w-[20%] h-full pl-5">
-      <img src="~/assets/images/dog01.jpg" />
+      <el-table :data="files" :border="true" stripe header-align="center" style="height:100%">
+        <el-table-column type="index"></el-table-column>
+        <el-table-column prop="name" label="name" :align="`center`"></el-table-column>
+        <el-table-column label="label" :align="`center`">
+          <template #default="scope">
+            <div v-if="scope.row.label">{{ scope.row.label.name}}</div>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -37,7 +45,10 @@ onMounted(() => {
 
 })
 
-
-
+function changeFileLabel(file: File): void {
+  const target = files.find(item => item.name === file.name);
+  if (!target) return;
+  target.label = file.label;
+}
 
 </script>

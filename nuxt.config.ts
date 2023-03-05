@@ -14,4 +14,7 @@ export default defineNuxtConfig({
     strict: true
   },
   modules: ['@element-plus/nuxt'],
+  app:{
+    baseURL:'/nuxt-image-picker/',
+  },
 })

@@ -31,15 +31,15 @@ onMounted(() => {
   const fileNames = ["dog01", "dog02", "dog03", "dog04", "dog05"]
 
   fileNames.forEach((name) => {
-    const src = `_nuxt/assets/images/${name}.jpg`
+    const src = `/nuxt-image-picker/images/${name}.jpg`
     files.push({ name: `${name}01`, src })
   })
   fileNames.forEach((name) => {
-    const src = `_nuxt/assets/images/${name}.jpg`
+    const src = `/nuxt-image-picker/images/${name}.jpg`
     files.push({ name: `${name}02`, src })
   })
   fileNames.forEach((name) => {
-    const src = `_nuxt/assets/images/${name}.jpg`
+    const src = `/nuxt-image-picker/images/${name}.jpg`
     files.push({ name: `${name}03`, src })
   })
 

@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full flex flex-wrap">
     <div class="w-[80%] h-full">
-      <ImagePanel :files="files" :labels="labels" @change-file-label="changeFileLabel" />
+      <ImagePicker :files="files" :labels="labels" @change-file-label="changeFileLabel" />
     </div>
     <div class="w-[20%] h-full pl-5">
       <el-table :data="files" :border="true" stripe header-align="center" style="height:100%">

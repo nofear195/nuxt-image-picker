@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col focus:outline-none h-full border  p-5" ref="classifier" tabindex="1" @mouseove="enterArea"
-        @keydown.exact="changeCurrentLabelByHotKey" @wheel="resizeImageSizeByWheel">
+        @wheel="resizeImageSizeByWheel">
         <div class="h-[10%] flex justify-around items-center my-2">
             <div class="w-1/5 flex items-center flex-col">
                 <div class="mb-2">Resize Image</div>
@@ -13,7 +13,7 @@
                 </el-select>
             </div>
             <div class="w-1/6 flex items-center flex-col">
-                <div class="mb-2">Switch Categories</div>
+                <div class="mb-2">Filter Images List</div>
                 <el-select v-model="selectValue">
                     <el-option key="all" :label="getLabelCount('all')" value="all"></el-option>
                     <el-option key="unpick" :label="getLabelCount('unpick')" value="unpick"></el-option>
@@ -78,11 +78,6 @@ const filterFiles = computed<File[]>(() => {
 
 function enterArea(): void {
     classifier.value?.focus();
-}
-
-function changeCurrentLabelByHotKey(event: KeyboardEvent): void {
-    const pressKeyToNumber = Number(event.key);
-    if (isNaN(pressKeyToNumber)) return;
 }
 
 function resizeImageSizeByWheel(event: WheelEvent): void {
